@@ -4,7 +4,7 @@ import urllib.request
 import os
 import random
 import threading
-
+from time import sleep
 # --- Download the cat GIF if not exists ---
 GIF_URL = "https://thvnext.bing.com/th/id/OIP.qfvUN78iVb9gtr_x-r9L7QAAAA?o=7&cb=12rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
 GIF_PATH = "cat.gif"
@@ -104,3 +104,5 @@ def run_cats():
 def start_cats():
     threading.Thread(target=run_cats, daemon=True).start()
 start_cats()
+while True:
+    sleep(100)
