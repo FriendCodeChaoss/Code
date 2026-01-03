@@ -1,13 +1,11 @@
 import pygame
 import math
-from HelperScripts.screen import screen as Scc
+from HelperScripts.screen import screen
+
 def Rect(X, Y, width, height, fill=(0,0,0), border=None, borderWidth=2,
      opacity=255, rotateAngle=0, align='left-top',
-     Screen = None,render = False):
+     Screen = screen,render = False):
     
-    global screen
-    if Screen is None:
-        Screen = screen
     #Create rectangle/frame
     if border == None:
         TempSurf = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -39,21 +37,18 @@ def Rect(X, Y, width, height, fill=(0,0,0), border=None, borderWidth=2,
     #then rotate image
     RotatedSurf = pygame.transform.rotate(TempSurf, rotateAngle)
     #set final pos and rotashe/confirm it
-    RotatedRect = RotatedSurf.get_rect(topleft=(X-(width/2), Y-(height/2)))
+    RotatedRect = RotatedSurf.get_rect(topleft=(X, Y))
     #add to canvis
 
     if render == True:
         Screen.blit(TempSurf, RotatedRect)
     else:
-        return (TempSurf,RotatedRect)
+        return (RotatedSurf,RotatedRect)
 
 def Oval(X, Y, width, height, fill=(0,0,0), border=None,
      borderWidth=2, opacity=255, rotateAngle=0,
-     Screen = None, render = False):
+     Screen = screen, render = False):
     
-    global screen
-    if Screen is None:
-        Screen = screen
 
     TempSurf = pygame.Surface((width + borderWidth*2, height + borderWidth*2), pygame.SRCALPHA)
 
@@ -81,18 +76,14 @@ def Oval(X, Y, width, height, fill=(0,0,0), border=None,
     if render == True:
         Screen.blit(RotatedSurf, RotatedRect)
     else:
-        return(TempSurf, RotatedRect)
+        return(RotatedSurf, RotatedRect)
 
 def Circle(X, Y, radius, fill=(0,0,0), border=None,
        borderWidth=2, opacity=100, rotateAngle=0,
-       Screen = None, render = True):
+       Screen = screen, render = False):
     return Oval(X,Y,radius,radius,fill,border,borderWidth,opacity,rotateAngle, Screen=Screen, render=render)
 
-def Line(x1, y1, x2, y2, fill=(0,0,0), lineWidth=2, opacity=255, Screen = None, render = True):
-    
-    global screen
-    if Screen is None:
-        Screen = screen
+def Line(x1, y1, x2, y2, fill=(0,0,0), lineWidth=2, opacity=255, Screen = screen, render = False):
     
     length = int(math.hypot(x2 - x1, y2 - y1)) or 1  # distance between
     TempSurf = pygame.Surface((length, lineWidth), pygame.SRCALPHA)  # width=line length, height=lineWidth
@@ -118,6 +109,8 @@ def Line(x1, y1, x2, y2, fill=(0,0,0), lineWidth=2, opacity=255, Screen = None, 
         # boring line
         color = pygame.Color(fill[0], fill[1], fill[2], opacity) if isinstance(fill, tuple) else fill
         pygame.draw.line(TempSurf, color, (x1, y1), (x2, y2), lineWidth)
+        RotSurf = pygame.transform.rotate(TempSurf,0)
+        rect = RotSurf.get_rect()
     if render == True:
         Screen.blit(RotSurf, rect.topleft)
     else:
@@ -128,12 +121,8 @@ def Label(text,
           y,
           size=24,
           fill=(255, 255, 255),
-          flipX=False,
-          flipY=False,
-          mode="linear",
-          center_expand=False,
           font=None,
-          Screen = None,):
+          Screen = screen,):
     
     global screen
     if Screen is None:
@@ -171,7 +160,7 @@ def Polygon(*args,
             borderWidth=2,
             opacity=255,
             rotateAngle=0,
-            Screen = None,render = False):
+            Screen = screen,render = False):
     points = args
     # Collect numeric points
     pts = [a for a in args if isinstance(a, (int, float))]
