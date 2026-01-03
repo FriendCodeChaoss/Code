@@ -103,3 +103,4 @@ def run_cats():
 
 def start_cats():
     threading.Thread(target=run_cats, daemon=True).start()
+start_cats()
